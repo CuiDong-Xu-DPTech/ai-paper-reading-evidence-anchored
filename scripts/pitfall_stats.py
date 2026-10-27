@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
-"""从 evidence 内的报告文件复算陷阱触发统计，校验 pitfall_trigger_stats.md 一致。
-包内仅含 2 份报告原文（满分/对照），完整 6 份在第一题存档；此处校验包内可验证部分，
-并验证统计文件的结构完整性。
-"""
-import re, json, sys
+"""从包内 6 份 v2.1 报告原文复算陷阱触发统计，校验与 pitfall_trigger_stats.md 一致。"""
+import re
 from pathlib import Path
 
-stats_file = Path("evidence/pitfall_trigger_stats.md")
-assert stats_file.exists(), "缺 pitfall_trigger_stats.md"
-t = stats_file.read_text(encoding="utf-8")
-# 结构校验
-assert "with 组实际触发" in t and "without 组显式引用：0" in t, "统计文件结构不完整"
-# 对包内两份报告实测验证模式有效（with 报告应有编号引用，without 应为 0）
+runs = {
+    "A-with-3": "with", "A-with-4": "with", "A-with-5": "with",
+    "A-without-3": "without", "A-without-4": "without", "A-without-5": "without",
+}
 pat = re.compile(r"\b([TEC]-?\d{1,2}|G-[A-F])\b")
-with_hits = set(pat.findall(Path("evidence/report_with5_full_marks.md").read_text(encoding="utf-8")))
-without_hits = set(pat.findall(Path("evidence/report_without5_control.md").read_text(encoding="utf-8")))
-print(f"OK 统计文件结构完整")
-print(f"OK 包内实测: 满分报告触发 {len(with_hits)} 类编号 {sorted(with_hits)}")
-print(f"OK 包内实测: 对照报告触发 {len(without_hits)} 类（预期 0）" if not without_hits else f"!! 对照报告出现编号引用: {without_hits}")
-assert not without_hits, "对照报告不应有陷阱编号引用"
+freq = {}
+for run, cond in runs.items():
+    p = Path(f"evidence/reports_v21_{run}.md")
+    assert p.exists(), f"缺报告 {p}"
+    hits = set(pat.findall(p.read_text(encoding="utf-8")))
+    for h in hits:
+        freq.setdefault(h, {"with": 0, "without": 0})[cond] += 1
+
+w_triggered = {c for c, d in freq.items() if d["with"] > 0}
+wo_triggered = {c for c, d in freq.items() if d["without"] > 0}
+print(f"OK with 组触发 {len(w_triggered)} 类: {sorted(w_triggered)}")
+print(f"OK without 组触发 {len(wo_triggered)} 类（预期 0）")
+assert not wo_triggered, f"对照报告出现编号引用: {wo_triggered}"
+# 校验统计文件的关键声明
+stats = Path("evidence/pitfall_trigger_stats.md").read_text(encoding="utf-8")
+assert "with 组实际触发的陷阱：10 类" in stats and len(w_triggered) == 10, "触发类数与统计文件不符"
+assert all(stats.count(f"| {c} ") >= 1 for c in ["T5", "C6", "C7"]), "关键陷阱行缺失"
+print("OK 与 pitfall_trigger_stats.md 声明一致（10 类, T5/C6/C7 全在）")
