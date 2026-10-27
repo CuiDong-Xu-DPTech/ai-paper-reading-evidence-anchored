@@ -46,13 +46,13 @@
 
 GM3 不是一次性观察。漏限定条件、脱离原文自说自话，是 2025-2026 年被顶刊与 benchmark 反复量化的结构性问题。三引足够说明。
 
-**泛化偏差已被精确测量。** Royal Society Open Science 2025 年的研究分析了 10 个 LLM 对 4900 份摘要的改写：LLM 摘要比人类摘要近 5 倍更易过度泛化（OR=4.85）；26-73% 的案例丢失限定词（qualifiers），把“在 X 条件下可能”降格为“会”、把过去时改成现在时、把描述性结论升级为行动建议。更糟的是两点：明确提示“要准确”无法消除该偏差，而且新模型反而更差。而该文给出的缓解方案只有“降低温度”和“建立泛化准确性基准”，全部停在模型侧，没有一个落在读者手里。（https://doi.org/10.1098/rsos.241776）
+**泛化偏差已被精确测量。** Royal Society Open Science 2025 年的研究分析了 10 个 LLM 对 4900 份摘要的改写：LLM 摘要比人类摘要近 5 倍更易过度泛化（OR=4.85）；26-73% 的案例丢失限定词（qualifiers），把“在 X 条件下可能”降格为“会”、把过去时改成现在时、把描述性结论升级为行动建议。更糟的是两点：明确提示“要准确”无法消除该偏差，而且新模型反而更差。而该文给出的缓解方案只有“降低温度”和“建立泛化准确性基准”，全部停在模型侧，没有一个落在读者手里。（https:/doi.org/10.1098/rsos.241776）
 
-**章节级抽取在真实使用条件下大面积失败。** PaperAsk（arXiv 2025-10）在网页端真实使用条件下测了引用检索、内容抽取与 claim 验证：章节特定内容抽取失败率 72-91%，多引用检索失败率 48-98%。作者把失败归因于“检索上下文不受控扩张 + 语义相关优先于任务指令”——这正是 GM3 类遗漏的机制土壤：语义上“像结论”的内容，会系统性地挤掉躺在证明战术位置上的化归语句。（https://arxiv.org/html/2510.22242）
+**章节级抽取在真实使用条件下大面积失败。** PaperAsk（arXiv 2025-10）在网页端真实使用条件下测了引用检索、内容抽取与 claim 验证：章节特定内容抽取失败率 72-91%，多引用检索失败率 48-98%。作者把失败归因于“检索上下文不受控扩张 + 语义相关优先于任务指令”——这正是 GM3 类遗漏的机制土壤：语义上“像结论”的内容，会系统性地挤掉躺在证明战术位置上的化归语句。（https:/arxiv.org/html/2510.22242）
 
-**grounding 有硬天花板。** ADAM-Bench 让 34 个 LLM/LMM 做 100 万条原子 claim 对 700 万条多模态证据的 4-way grounding，成绩只有 25.2%-51.1%——对话式谈论文极易脱离原文，且这是模型能力问题，不是提示词能解决的。（https://adam-bench.github.io/Repo/Adam_Benchmark.pdf）
+**grounding 有硬天花板。** ADAM-Bench 让 34 个 LLM/LMM 做 100 万条原子 claim 对 700 万条多模态证据的 4-way grounding，成绩只有 25.2%-51.1%——对话式谈论文极易脱离原文，且这是模型能力问题，不是提示词能解决的。（https:/adam-bench.github.io/Repo/Adam_Benchmark.pdf）
 
-三引放在一起，结论很清楚：问题是真的（顶刊确认）、是结构性的（跨任务复现）、模型侧有天花板（短期不会消失）。但我们检索了中英文主流生态 23 次（GitHub 项目、学术 benchmark、中文社区、玻尔生态，完整调研见 `scratch/research_landscape.md`），没有发现任何一篇系统设计并验证过“用户侧阅读工作流”能挽回多少限定条件保真度——学术界的建议是降温度、建基准、改论文写作规范，全部不在读者手里。
+三引放在一起，结论很清楚：问题是真的（顶刊确认）、是结构性的（跨任务复现）、模型侧有天花板（短期不会消失）。但我们检索了中英文主流生态 23 次（GitHub 项目、学术 benchmark、中文社区、玻尔生态，完整调研见 `evidence/（调研过程）`），没有发现任何一篇系统设计并验证过“用户侧阅读工作流”能挽回多少限定条件保真度——学术界的建议是降温度、建基准、改论文写作规范，全部不在读者手里。
 
 这就是本文要补的环节：在模型不动的前提下，一道阅读流程（体裁判定→学科检查单→陷阱扫描→页码锚点程序校验）到底有没有用、有多大用、代价是什么。我们用 3 组配对双盲对照实验回答。
 
@@ -183,7 +183,7 @@ XRead 的执行流程是一道预检加四道工序：**Q0 预检与体裁判定
 
 ## 6. 与 Bohrium LKM 的交叉验证
 
-> 原始数据：`scratch/bohr/lkm_bio.json`、`scratch/bohr/lkm_prl.json`、`scratch/lkm_coverage/claims_60.json`（2026-10-27 抽取）。
+> 原始数据：`bohrium-workflow/lkm_bio.json`、`bohrium-workflow/lkm_prl.json`、`evidence/claims_60.json`（2026-10-27 抽取）。
 
 ### 6.1 为什么要交叉验证
 
@@ -274,15 +274,15 @@ without 报告像"广撒网"：触及更多主张但浅、缺边界讨论；with
 
 声称包治误读的阅读流程都值得怀疑。以下 5 条边界是我们实测后愿意白纸黑字写下的，每条附证据指针。
 
-**一、模型能力天花板决定 grounding 类错误流程救不完。** ADAM-Bench 显示 34 个模型的 grounding 成绩仅 25.2%-51.1%（https://adam-bench.github.io/Repo/Adam_Benchmark.pdf）。流程能强制“读了哪些页要留痕、每个数字要溯源、每条主张带条件”，但无法替模型理解它读不懂的东西；锚点失真这类可程序校验的错误能拦下一部分，理解层面的缺口是模型侧问题，短期无解。（证据：`material_pack/research_landscape.md` §1.2；`material_pack/experiment_cards.md` 卡 4）
+**一、模型能力天花板决定 grounding 类错误流程救不完。** ADAM-Bench 显示 34 个模型的 grounding 成绩仅 25.2%-51.1%（https:/adam-bench.github.io/Repo/Adam_Benchmark.pdf）。流程能强制“读了哪些页要留痕、每个数字要溯源、每条主张带条件”，但无法替模型理解它读不懂的东西；锚点失真这类可程序校验的错误能拦下一部分，理解层面的缺口是模型侧问题，短期无解。（证据：`research_landscape.md` §1.2；`experiment_cards.md` 卡 4）
 
-**二、强基线是我们必须交代的 null result。** qwen3.8-max 在 thinking=max 下 4 次裸跑：38 条锚点抽查 37 条精确命中（97.4%）、0 编造页码，还主动发现论文自身的排版与统计错误——强模型基线并不天然产生幻觉。所以 XRead 的价值不在“救弱模型”，而在把偶发的好行为变成必然的流程（100% 机器锚点校验、强制三级标注、盲区检测）。这也解释了对照实验中 without 组仍能拿 27-28 分：+1.83/30 的增益集中在结构性检查项，不是防幻觉式的悬殊差距。（证据：`material_pack/failure_modes.md` 附录；`runs/pain_point_scouts/qwen/qwen_findings.md` §2/§4）
+**二、强基线是我们必须交代的 null result。** qwen3.8-max 在 thinking=max 下 4 次裸跑：38 条锚点抽查 37 条精确命中（97.4%）、0 编造页码，还主动发现论文自身的排版与统计错误——强模型基线并不天然产生幻觉。所以 XRead 的价值不在“救弱模型”，而在把偶发的好行为变成必然的流程（100% 机器锚点校验、强制三级标注、盲区检测）。这也解释了对照实验中 without 组仍能拿 27-28 分：+1.83/30 的增益集中在结构性检查项，不是防幻觉式的悬殊差距。（证据：`failure_modes.md` 附录；`runs/pain_point_scouts/qwen/qwen_findings.md` §2/§4）
 
-**三、耗时代价是真实的 1.2-2.5 倍。** 三组配对实测：with 组耗时 455/846/853 秒，without 组 354/344/130 秒，深度增加折合 1.2-2.5 倍时间代价。四道工序不是免费的，值不值，取决于你的单次误读成本有多高。（证据：`material_pack/experiment_cards.md` 卡 2、卡 4）
+**三、耗时代价是真实的 1.2-2.5 倍。** 三组配对实测：with 组耗时 455/846/853 秒，without 组 354/344/130 秒，深度增加折合 1.2-2.5 倍时间代价。四道工序不是免费的，值不值，取决于你的单次误读成本有多高。（证据：`experiment_cards.md` 卡 2、卡 4）
 
-**四、单份评分存在 ±0.5 噪声。** 第二轮中两名评委对两份报告的相对排名判断不一致。因此本文所有结论只建立在“三轮×双评委×10 份混评、三组配对全同向”之上，单轮单评委的分差不作证据。（证据：`material_pack/experiment_cards.md` 卡 4）
+**四、单份评分存在 ±0.5 噪声。** 第二轮中两名评委对两份报告的相对排名判断不一致。因此本文所有结论只建立在“三轮×双评委×10 份混评、三组配对全同向”之上，单轮单评委的分差不作证据。（证据：`experiment_cards.md` 卡 4）
 
-**五、B 侧增益小于 M 侧。** 生物论文（B 侧）的 with/without 差距明显小于数学论文（M 侧）：Skill 的边际价值在数学证明类阅读上最大，这符合 D1 检查单把“证明策略骨架”设为强制项的设计预期；也意味着主要读实验科学论文的读者，实际增益会低于 +1.83/30 的均值。（证据：`material_pack/experiment_cards.md` 卡 4）
+**五、B 侧增益小于 M 侧。** 生物论文（B 侧）的 with/without 差距明显小于数学论文（M 侧）：Skill 的边际价值在数学证明类阅读上最大，这符合 D1 检查单把“证明策略骨架”设为强制项的设计预期；也意味着主要读实验科学论文的读者，实际增益会低于 +1.83/30 的均值。（证据：`experiment_cards.md` 卡 4）
 
 一句话收束：XRead 拦截的是流程性遗漏——跳读、口径合并、限定后置、锚点失真；它拦截不了理解性缺失。前者是我们观察到的大头，后者目前任何流程都无解——我们选择把这条线画清楚，而不是假装它不存在。
 
@@ -290,7 +290,7 @@ without 报告像"广撒网"：触及更多主张但浅、缺边界讨论；with
 
 ## 8. 复现指南
 
-全部命令可直接复制。先说明一点：模型网关端点 `https://open.bohrium.com/openapi/model-gateway/v1` 未见于官方文档（Apifox 文档与 bohrium-skills 仓库均未收录），以下配置以平台实际返回为准（本机实证，OpenAI completions 兼容协议）。
+全部命令可直接复制。先说明一点：模型网关端点 `https:/open.bohrium.com/openapi/model-gateway/v1` 未见于官方文档（Apifox 文档与 bohrium-skills 仓库均未收录），以下配置以平台实际返回为准（本机实证，OpenAI completions 兼容协议）。
 
 ### 8.1 环境：bohr CLI + pi agent + 模型网关
 
@@ -306,7 +306,7 @@ pi agent（本实验用 pi-coding-agent 1.3.0）在 `~/.pi/agent/models.json` �
   "providers": {
     "bohrium": {
       "name": "Bohrium Model Gateway",
-      "baseUrl": "https://open.bohrium.com/openapi/model-gateway/v1",
+      "baseUrl": "https:/open.bohrium.com/openapi/model-gateway/v1",
       "api": "openai-completions",
       "compat": { "supportsReasoningEffort": true, "thinkingFormat": "openai" },
       "models": [{
@@ -382,17 +382,17 @@ python3 skills/xread/scripts/verify_anchors.py report.md paper.txt
 
 ### 9.1 问题背书三引（问题不是我们发明的）
 
-- **Royal Society Open Science 2025**（泛化偏差）：LLM 摘要比人类摘要近 5 倍更易过度泛化（OR=4.85），26–73% 案例丢失限定词，且「明确提示要准确」无法消除 → https://doi.org/10.1098/rsos.241776
-- **PaperAsk**（arXiv 2025-10）：真实网页端条件下章节特定内容抽取失败 72–91% → https://arxiv.org/html/2510.22242
-- **ADAM-Bench**：34 个模型论文 grounding 成绩仅 25.2%–51.1% → https://adam-bench.github.io/Repo/Adam_Benchmark.pdf
+- **Royal Society Open Science 2025**（泛化偏差）：LLM 摘要比人类摘要近 5 倍更易过度泛化（OR=4.85），26–73% 案例丢失限定词，且「明确提示要准确」无法消除 → https:/doi.org/10.1098/rsos.241776
+- **PaperAsk**（arXiv 2025-10）：真实网页端条件下章节特定内容抽取失败 72–91% → https:/arxiv.org/html/2510.22242
+- **ADAM-Bench**：34 个模型论文 grounding 成绩仅 25.2%–51.1% → https:/adam-bench.github.io/Repo/Adam_Benchmark.pdf
 
 ### 9.2 规则先例：致敬并指出缺口
 
-读论文的证据规则早已有人提出：paper-reading-zh 的中文证据规则包（「未核验的不补，读不到的不编，比较前先对口径」，https://github.com/MrGeDiao/paper-reading-zh ）；Paper Close Reading 的三遍逐段核验（知乎 AI Works 栏目，https://www.zhihu.com/project/detail/240498 ）。本文的贡献不是重造规则，而是补上缺失的实验环节：**这些规则到底有没有用、增益多大、代价几何**——检索确认此前无人发布过「配对双盲实验」数据。
+读论文的证据规则早已有人提出：paper-reading-zh 的中文证据规则包（「未核验的不补，读不到的不编，比较前先对口径」，https:/github.com/MrGeDiao/paper-reading-zh ）；Paper Close Reading 的三遍逐段核验（知乎 AI Works 栏目，https:/www.zhihu.com/project/detail/240498 ）。本文的贡献不是重造规则，而是补上缺失的实验环节：**这些规则到底有没有用、增益多大、代价几何**——检索确认此前无人发布过「配对双盲实验」数据。
 
 ### 9.3 相邻类型学：划清视角边界
 
-27 类陷阱库与三个相邻分类学互补而非重叠：Dawes 基准（审稿人挑论文的错，10 大类 62 子类，https://github.com/Dawes-Institute/ai-peer-review-benchmark ）；NASA/ACL 2025 错误 schema（QA 系统输出视角，https://doi.org/10.1145/3772318.3791843 ）；ScholScan（论文自身缺陷检测，9 类，https://arxiv.org/html/2603.28651v1 ）。本文视角是「读者/AI 会不会误读」，跨学科、直接服务阅读流程。
+27 类陷阱库与三个相邻分类学互补而非重叠：Dawes 基准（审稿人挑论文的错，10 大类 62 子类，https:/github.com/Dawes-Institute/ai-peer-review-benchmark ）；NASA/ACL 2025 错误 schema（QA 系统输出视角，https:/doi.org/10.1145/3772318.3791843 ）；ScholScan（论文自身缺陷检测，9 类，https:/arxiv.org/html/2603.28651v1 ）。本文视角是「读者/AI 会不会误读」，跨学科、直接服务阅读流程。
 
 ### 9.4 本次贡献清单
 
