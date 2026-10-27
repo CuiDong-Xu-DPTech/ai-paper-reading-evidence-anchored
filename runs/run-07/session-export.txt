@@ -1,0 +1,55 @@
+# 会话可见内容导出 (export)
+- 来源文件: 2026-10-27T16-42-19-364Z_01a17e3d-c363-7747-a3c1-242230518aec.jsonl
+- 来源 SHA-256: 1a3875cac7079be87635a161555bf3d136dce5ec6fd956e9312cec103da67028
+- 宿主软件: pi-coding-agent 1.3.0（模型 bohrium 网关）
+- 导出方式: 从宿主原生会话记录按时间顺序抽取用户输入与助手可见输出与工具调用名；未改写、未补写、不含内部推理。
+
+
+## [用户]
+
+你是科研工作助理。请真实执行以下 AI 文献阅读工作流验证（在当前目录 /tmp/task2_worklog 工作）：
+1. 用 bash 运行 cd /Users/dp/Downloads/Agent比赛/bihrium-1/2/contest/repo && make verify 并记录全部输出
+2. 用 bash 运行 cd /Users/dp/Downloads/Agent比赛/bihrium-1 && bohr lkm search 'host virus interaction variance' --yes | head -50 记录 LKM 检索输出
+3. 用 Read 工具读 /Users/dp/Downloads/Agent比赛/bihrium-1/2/contest/repo/evidence/round3_final_scores.json 并复算增益
+4. 汇总成 workflow_verification.md 写入当前目录：三步各验证了什么、结果数字、是否符合 README 声明（+1.83 增益、make verify 全绿、LKM 命中 10 论文）
+最后输出 DONE
+
+
+## [助手]
+
+[工具调用: bash]
+[工具调用: bash]
+
+
+## [助手]
+
+make verify 与 LKM 检索均已执行。现在读取分数文件并复算增益，同时查看 README 声明。
+[工具调用: read]
+[工具调用: bash]
+
+
+## [助手]
+
+复算配对增益：v2.1 三组为非 v20 的三对（A-with-3/4/5 vs A-without-3/4/5）。验证 LKM 命中论文数：
+[工具调用: bash]
+
+
+## [助手]
+
+全部三步执行完毕，写入汇总文件：
+[工具调用: write]
+
+
+## [助手]
+
+三步验证全部真实执行完毕，汇总已写入 `/tmp/task2_worklog/workflow_verification.md`：
+
+**第 1 步 · `make verify`**：全部自检通过（`== 全部自检通过：证据链完整可用 ==`）。证据文件 5/5 OK；完整版锚点校验 70/70 有效（包内片段因版权截断显示越界，属预期且已在输出中注明）；增益复算 with=29.17 (n=3) vs without=27.33 (n=3)，Δ=+1.83，与正文声明一致；with 组触发 10 类陷阱（含 T5/C6/C7），without 组 0 类，与 pitfall_trigger_stats.md 一致。
+
+**第 2 步 · `bohr lkm search 'host virus interaction variance'`**：返回 `ok: true`，命中 **10 篇**不同论文（宿主-病毒适应性权衡、宿主易感性遗传决定因子、MHC 多态性等，主题高度相关），`has_more=true` —— 符合 README“一次查询命中 10 篇”声明。
+
+**第 3 步 · 复算 `round3_final_scores.json`**：v2.1 三组配对（with-3/4/5 vs without-3/4/5）增益分别为 +1.5 / +1.0 / +3.0，with 均值 29.17、without 均值 27.33，平均 **+1.83**，无翻转；与 JSON 内记录的 `v21_paired_gain=1.8333...`、make verify 输出、README 声明三方自洽。
+
+**结论**：README 的三项关键声明（+1.83 增益、make verify 全绿、LKM 命中 10 论文）全部实测验证通过 ✅
+
+DONE
