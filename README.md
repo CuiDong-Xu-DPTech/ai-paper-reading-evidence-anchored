@@ -486,4 +486,4 @@ bohrium-workflow/      LKM 抽取摘要与玻尔生态工作流
 paper-excerpts/        论文关键片段（供核查，含来源与页码）
 ```
 
-*本分享为「AI 文献阅读」比赛作品，Release v1.0（2026-10-27）。*
+*本分享为「AI 文献阅读」比赛作品。版本：commit ddfedfb70aa887dc91b887b8dfdb90c950cca55b（tag v1.0，2026-10-27）。*
