@@ -1,0 +1,21 @@
+{
+ "n_pairs": 22,
+ "exact_agreement": "8/22",
+ "within_1_point": "18/22 (82%)",
+ "mean_abs_diff": 0.82,
+ "pearson_r": 0.329,
+ "per_round": {
+  "R1": {
+   "n": 4,
+   "mean_diff": 0.75
+  },
+  "R2": {
+   "n": 8,
+   "mean_diff": 0.5
+  },
+  "R3": {
+   "n": 10,
+   "mean_diff": 1.1
+  }
+ }
+}
