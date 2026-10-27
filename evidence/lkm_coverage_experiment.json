@@ -1,0 +1,16 @@
+{
+ "experiment": "LKM 主张覆盖判定（glm-5.3 语义判定，2026-10-27）",
+ "method": "Bohrium LKM 抽取 PLOS Biology 论文 60 条主张 → 两份审读报告（双盲满分 vs 对照）逐条语义判定是否覆盖",
+ "results": {
+  "A-with-5（双盲满分30）": {
+   "overall": "21/60 (35%)",
+   "high_risk_with_failure_mode": "5/25"
+  },
+  "A-without-5（对照）": {
+   "overall": "24/60 (40%)",
+   "high_risk_with_failure_mode": "7/25"
+  }
+ },
+ "finding": "LKM 覆盖广度上 without 略高（40% vs 35%），但双盲评分 with 完胜（30 vs 27）——两个度量测的不是同一个东西：LKM 覆盖测广度，双盲评分测关键事实命中+论证规范+结构纪律。这提示：广撒网式报告可能覆盖更多主张但丢失深度与规范；检查单驱动聚焦关键主张与边界。也提示 LKM 覆盖率可作为独立的报告质量维度，与人工评分互补。",
+ "limitation": "判定模型与运行模型同为 glm-5.3（非盲），n=1 对报告；结论是观察性的，不是统计显著的。"
+}
