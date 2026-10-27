@@ -1,6 +1,6 @@
-.PHONY: verify anchors evidence stats help
+.PHONY: verify anchors evidence stats pitfall help
 
-verify: anchors evidence stats
+verify: anchors evidence stats pitfall
 	@echo "== 全部自检通过：证据链完整可用 =="
 
 anchors:
@@ -16,6 +16,9 @@ evidence:
 
 stats:
 	@python3 scripts/verify_stats.py
+
+pitfall:
+	@python3 scripts/pitfall_stats.py
 
 help:
 	@echo "make verify  - 全部自检（锚点+证据+统计复算）"
