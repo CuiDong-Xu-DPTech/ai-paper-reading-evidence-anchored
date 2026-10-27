@@ -1,0 +1,70 @@
+{
+ "A-with-1": {
+  "gen": "r1",
+  "chars": 4598,
+  "pitfall_ref": 8,
+  "uncertain_labels": 1,
+  "tensor_power": false,
+  "coverage_statement": false
+ },
+ "A-with-2": {
+  "gen": "r1",
+  "chars": 3674,
+  "pitfall_ref": 6,
+  "uncertain_labels": 2,
+  "tensor_power": false,
+  "coverage_statement": false
+ },
+ "A-without-1": {
+  "gen": "r1",
+  "chars": 4133,
+  "pitfall_ref": 0,
+  "uncertain_labels": 0,
+  "tensor_power": false,
+  "coverage_statement": false
+ },
+ "A-without-2": {
+  "gen": "r1",
+  "chars": 3407,
+  "pitfall_ref": 0,
+  "uncertain_labels": 2,
+  "tensor_power": false,
+  "coverage_statement": false
+ },
+ "A-with-3": {
+  "gen": "r2",
+  "chars": 4677,
+  "pitfall_ref": 3,
+  "uncertain_labels": 2,
+  "tensor_power": true,
+  "coverage_statement": true,
+  "anchors_M": "锚点总数(含区间展开): 61; 有效: 61; 无效: 0"
+ },
+ "A-with-4": {
+  "gen": "r2",
+  "chars": 4762,
+  "pitfall_ref": 3,
+  "uncertain_labels": 1,
+  "tensor_power": true,
+  "coverage_statement": true,
+  "anchors_M": "锚点总数(含区间展开): 70; 有效: 70; 无效: 0"
+ },
+ "A-without-3": {
+  "gen": "r2",
+  "chars": 4582,
+  "pitfall_ref": 0,
+  "uncertain_labels": 0,
+  "tensor_power": false,
+  "coverage_statement": false,
+  "anchors_M": "锚点总数(含区间展开): 38; 有效: 38; 无效: 0"
+ },
+ "A-without-4": {
+  "gen": "r2",
+  "chars": 4317,
+  "pitfall_ref": 0,
+  "uncertain_labels": 0,
+  "tensor_power": false,
+  "coverage_statement": false,
+  "anchors_M": "锚点总数(含区间展开): 39; 有效: 39; 无效: 0"
+ }
+}

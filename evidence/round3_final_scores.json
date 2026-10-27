@@ -1,0 +1,67 @@
+{
+ "mapping": {
+  "A-with-5": "甲",
+  "A-without-3": "乙",
+  "A-with-1-v20": "丙",
+  "A-with-2-v20": "丁",
+  "A-with-4": "戊",
+  "A-without-5": "己",
+  "A-without-4": "庚",
+  "A-with-3": "辛",
+  "A-without-1-v20": "壬",
+  "A-without-2-v20": "癸"
+ },
+ "summary": {
+  "A-with-5": {
+   "kimi": 30,
+   "qwen": 30,
+   "avg": 30.0
+  },
+  "A-without-3": {
+   "kimi": 28,
+   "qwen": 26,
+   "avg": 27.0
+  },
+  "A-with-1-v20": {
+   "kimi": 29,
+   "qwen": 29,
+   "avg": 29.0
+  },
+  "A-with-2-v20": {
+   "kimi": 28,
+   "qwen": 29,
+   "avg": 28.5
+  },
+  "A-with-4": {
+   "kimi": 28,
+   "qwen": 30,
+   "avg": 29.0
+  },
+  "A-without-5": {
+   "kimi": 26,
+   "qwen": 28,
+   "avg": 27.0
+  },
+  "A-without-4": {
+   "kimi": 29,
+   "qwen": 27,
+   "avg": 28.0
+  },
+  "A-with-3": {
+   "kimi": 28,
+   "qwen": 29,
+   "avg": 28.5
+  },
+  "A-without-1-v20": {
+   "kimi": 28,
+   "qwen": 29,
+   "avg": 28.5
+  },
+  "A-without-2-v20": {
+   "kimi": 28,
+   "qwen": 28,
+   "avg": 28.0
+  }
+ },
+ "v21_paired_gain": 1.8333333333333357
+}
