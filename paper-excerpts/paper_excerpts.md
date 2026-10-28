@@ -278,26 +278,6 @@ process; therefore, we enable the publication
 of all of the content of peer review and 
 author responses alongside final, published 
 articles. The editorial history of this article is 
-available here: https://doi.org/10.1371/journal.
-pbio.3003836
-Copyright: © 2026 Belyi et al. This is an open 
-access article distributed under the terms of 
-the Creative Commons Attribution License, 
-which permits unrestricted use, distribution, 
-RESEARCH ARTICLE
-Host–virus interactions dominate fitness and 
-conceal additive genetic variation
-Aleksei Belyi
-1¤*, Yiyang Du1, Alastair J. Wilson2, Ben Longdon2*, Francis M. Jiggins
-1*
-1  Department of Genetics, University of Cambridge, Cambridge, United Kingdom, 2  Centre for Ecology 
-and Conservation, University of Exeter, Penryn, United Kingdom 
-¤Current address: Centre for Ecology and Conservation, University of Exeter, Penryn, United Kingdom.‌
-* a.belyi@exeter.ac.uk (AB); B.Longdon2@exeter.ac.uk (BL); fmj1001@cam.ac.uk (FMJ)
-Abstract 
-Host–parasite coevolution is expected to generate strong selection for resistance and 
-infectivity that has the potential to erode genetic variation. Despite this, natural popu­
-lations often retain extensive genetic variation in these traits. ­Genotype-by-genotype 
-interactions on fitness can generate negative frequency-dependent selection, which 
-helps maintain this variation by preventing any host or pathogen g
-…(截断)
+available here: htt
+
+…(后略，完整原文见论文 DOI)
