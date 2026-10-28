@@ -392,141 +392,14 @@ python3 skills/xread/scripts/verify_anchors.py report.md paper.txt
 
 ## 第 5 章 复现指南：从零跑通「导出 → 精读 → 校验 → 交叉验证」
 
-前置条件：一台可联网的机器、Bohrium 账号（用于生成 AccessKey）、Python 3、npm、若干元预算。全程五个小节，每个小节的命令都可直接复制。
+> 完整命令块见第 6 章教程与 `bohrium-workflow/bohrium_tutorial.md`。六步操作序列：
 
 ### 5.1 环境配置：bohr CLI + pi agent + Bohrium 模型网关
-
-先装 bohr CLI 并配好密钥：
-
-```bash
-npm install -g @dptech-corp/bohr-cli     # bohr CLI（实测版本 2.8.3）
-export BOHR_ACCESS_KEY="你的 AccessKey"  # Bohrium「用户设置 → 账号」页生成
-```
-
-再给 pi agent（本流程实测宿主为 pi-coding-agent 1.3.0）配置 Bohrium 模型网关。在 `~/.pi/agent/models.json` 写入以下配置全文：
-
-```json
-{
-  "providers": {
-    "bohrium": {
-      "name": "Bohrium Model Gateway",
-      "baseUrl": "https://open.bohrium.com/openapi/model-gateway/v1",
-      "api": "openai-completions",
-      "compat": { "supportsReasoningEffort": true, "thinkingFormat": "openai" },
-      "models": [
-        {
-          "id": "glm-5.3",
-          "reasoning": true,
-          "input": ["text"],
-          "contextWindow": 1000000,
-          "maxTokens": 65536,
-          "cost": { "input": 1.12, "output": 3.92, "cacheRead": 0.28, "cacheWrite": 1.12 }
-        }
-      ]
-    }
-  }
-}
-```
-
-需要其他模型（如 kimi-k3、qwen3.8-max）时，在 `models` 数组里按同样字段追加条目即可。注意：该网关端点未见于官方文档（Apifox 文档与 bohrium-skills 仓库均未收录），以上配置以平台实际返回为准（OpenAI completions 兼容协议）。
-
-环境自检：
-
-```bash
-bohr --version
-# 预期输出：2.8.3（或更高）
-
-pi --model bohrium/glm-5.3 "只回复 ok"
-# 预期输出：ok（说明网关接入成功；无输出/报错则回查 models.json 与 AccessKey）
-```
-
 ### 5.2 论文文本导出
-
-页码锚点是一切校验的地基。用脚本把 PDF 导出为带页码标记的文本伴侣：
-
-```bash
-pip install pymupdf   # 若尚未安装 PyMuPDF
-python3 skills/xread/scripts/export_pdf_text.py PDF/paper.pdf > paper.txt
-head -n 5 paper.txt
-```
-
-预期输出：文件开头出现形如 `[第 1 页]` 的页码标记行，其后是正文。`verify_anchors.py` 依赖这些标记做页码对账——没有文本伴侣，第 5.4 节的校验无从谈起。
-
 ### 5.3 with / without 两组运行
-
-两组运行的唯一差异变量是「是否加载 XRead Skill」：同一模型（glm-5.3，thinking=max）、同一宿主、同一输入、独立会话（无跨会话记忆），尽量同小时段执行。
-
-```bash
-# with 组：加载 XRead
-pi --skill skills/xread --model bohrium/glm-5.3 \
-   "精读 paper.txt 与 paper_B.txt，输出跨学科组会级审读报告"
-
-# without 组：禁用全部 skills 的裸跑
-pi --no-skills --model bohrium/glm-5.3 \
-   "精读 paper.txt 与 paper_B.txt，输出跨学科组会级审读报告"
-```
-
-（flag 形态以 `pi --help` 为准；关键是 `--skill` 与 `--no-skills` 构成唯一差异。）
-
-预期产出对照（实测参考，输入为 52 页数学论文 + 12 页生物论文，各 3 次运行）：
-
-| 指标 | with 组 | without 组 |
-|---|---|---|
-| 证明策略（化归骨架）捕获 | 3/3 | 0/3 |
-| 引用覆盖率自查出现 | 3/3 | 0/3 |
-| 陷阱库具名引用（个） | 3 / 3 / 9 | 0 / 0 / 0 |
-| 锚点数（程序校验通过率） | 61 / 70 / 70（100%） | 38 / 39 / 22（100%） |
-| 耗时（秒） | 455 / 846 / 853 | 354 / 344 / 130 |
-
-怎么解读这张表：without 组的锚点也 100% 有效——强模型并不天然产生幻觉页码，真正的差距在**结构化深度**（with 组锚点密度为对照组的 1.6-3.2 倍）与系统性检查项（证明策略、盲区自检、陷阱扫描）。代价是真实的：with 组耗时为对照组的 1.2-2.5 倍。值不值，取决于你的单次误读成本有多高。
-
 ### 5.4 锚点校验
-
-```bash
-python3 skills/xread/scripts/verify_anchors.py report.md paper.txt
-# 预期输出（with 组实测）：
-#   锚点总数(含区间展开): 70; 有效: 70; 无效: 0
-# 退出码 0 = 全部锚点落在真实页码上
-
-python3 skills/xread/scripts/verify_anchors.py report.md paper.txt --quotes
-# --quotes 同时抽查报告引文是否逐字存在于原文
-```
-
-出现「无效锚点」行，说明报告把论断挂到了不存在的页——按第 4 章步骤 5 的降级规则处理：该论断降级为 `[不确定]` 或删除。注意两层校验缺一不可：脚本验的是「页码存在」，「归位正确」（页码真、但挂错了论断）要靠 `--quotes` 与人工抽查。
-
 ### 5.5 LKM 交叉验证
-
-用 Bohrium LKM 从完全独立的原理碰同一篇论文，看两套方法的报警位置是否吻合。两步命令、异步执行：
-
-```bash
-bohr lkm extract submit paper.pdf --yes
-# 预期输出：task_id（形如 fdf24d62-f293-48d2-8fe5-dda9bd5c16de）
-# 异步流水线：OCR 预处理 → step1-step4 抽取 → 图构建，全程约 10 分钟，1 元/篇
-
-bohr lkm extract result <task_id> > lkm.json
-# 预期输出：JSON 文件；用下面命令看统计：
-python3 -c "import json; print(json.load(open('lkm.json'))['stats'])"
-# 预期输出（PLOS Biology 论文实测）：
-# {'factors_total': 26, 'motivations_total': 26,
-#  'type_counts': {'claim': 60, 'question': 35}, 'variables_total': 95}
-```
-
-适用边界：LKM 抽取有 50 页上限（52 页数学长文实测被拒）——超上限时不必勉强，锚点校验走本地 PyMuPDF 路线、不依赖 LKM。
-
-拿到主张清单后，把它反过来当**覆盖核对清单**用：报告读完，逐条核对你的报告是否覆盖了带 `failure_mode` 的高危主张；未覆盖的（例如「Sharp sensitivity of the dynamical regime」的参数敏感性失效条件）作为追问清单交给 AI 补查。一个实测提醒：不要用「覆盖了多少条主张」单独评价一份报告——实测中未加载流程的报告覆盖广度反而略高（40% vs 35%），但关键事实命中与论证规范更差；广度与深度测的不是同一个东西。
-
 ### 本章可执行命令：全流程串联
-
-```bash
-export BOHR_ACCESS_KEY="你的 AccessKey"
-python3 skills/xread/scripts/export_pdf_text.py PDF/paper.pdf > paper.txt
-pi --skill skills/xread --model bohrium/glm-5.3 "精读 paper.txt，输出审读报告" > report.md
-python3 skills/xread/scripts/verify_anchors.py report.md paper.txt
-bohr lkm extract submit paper.pdf --yes
-bohr lkm extract result <task_id> > lkm.json
-```
-
----
 
 ## 第 6 章 玻尔生态四产品使用教程
 
