@@ -187,9 +187,8 @@ Now let me verify paper B anchors.
 - **paper_B.txt 锚点抽查**（约 30 处）：63%/62%(p7/p9)、7% p=0.076 (p7)、47%/44%/63% (p9)、UK 限制后 35% (p11)、88% 与 9%/24% (p12)、Mantel r=0.71 Holm p=0.041 (p12)、rg=0.54±0.44 (p9)、55%/56% (p7/p9)、347 样本/1,580 蝇 (p9/p10)、随机区组 (p20)、50:50 χ² (p22)、Holm (p22)、AI 披露 (p22)、S1–S3 Data (p22–23)、GenBank/Zenodo (p2/p19)、确定性模型无漂变 (p14)、非同域采样 (p15)、"did not aim to dissect" (p16)——均可定位。
 - **发现的问题**：乙把数据公开声明锚到 pp.1–2，而 paper_B.txt 中该声明在 [第 2 页]（p1 无对应内容）→ −1；甲从未指出方差分解的关联性/非因果性质（GB6=0）；四份报告**均未提及张量幂/Kronecker 幂把多变量化归已有理论的证明策略**（GM3 全部 0 分）；丁的"automatic 定义 (p49)"因 p49 证明中确有该定义的等价刻画而不扣分。
 
-现写入 verdict.json：
-[工具调用: write]
-
+现写入 verdi
+…(截断)
 
 ## [助手]
 
@@ -215,4 +214,5 @@ Now let me verify paper B anchors.
 - **报告甲**：锚定与三级标注纪律最佳（约 20 处锚点全部命中，含 p48 "especially simple"、p16 "did not aim to dissect"、arXiv 版本识别），但全文未指出方差分解的关联性/非因果性质 → GB6=0。
 - **报告乙**：GB 七分满（明确"模拟+实验不构成对 NFDS 机制的直接检验"），洞见锐利（90组合≠90基因型、算法在文献[9]），但可复现性锚点写作 pp.1–2，而 paper_B.txt 中数据可用性声明/Zenodo/GenBank 均在第 2 页，p1 无对应内容 → L 扣 1。
 - **报告丙**：综合最强——唯一标注 arXiv:2012.08283v1 具体编号、证明链闭合分析准确且以 [不确定] 诚实限定专家核验范围、统计量最精确（7% p=0.076 (p7)、rg=0.54±0.44 (p9)、UK 限制后 35% (p11)）且全部核实命中。
-- **报告丁**：紧凑但可靠，独有 Loxton–van der Poorten 1982 证明缺陷（p6，核实无误）与 monarch–Ophryocystis 追踪；其 automatic 定义锚 (p49) 因该页证明含定义的等价刻画而未判编造；B 对齐表覆盖略薄于丙。
+- **报告丁**：紧凑但可靠，独有 Loxton–van der Poorten 1982 证明缺陷（p6，核实无误）与 monarch–Ophryoc
+…(截断)
