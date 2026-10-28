@@ -530,87 +530,16 @@ bohr lkm extract result <task_id> > lkm.json
 
 ## 第 6 章 玻尔生态四产品使用教程
 
-这套文献阅读工作流横跨 Bohrium 的四个产品，各司其职：**读前解析（Uni-Parser）→ 读中推理（模型网关）→ 读后核查（LKM extract）→ 跨文献定位（LKM search）**，全链条都有可编程接口。以下每个产品按「干什么 / 命令 / 实测结果 / 边界」四段展开。
+工作流中用到的四个 Bohrium 产品及分工：
 
-### 6.1 LKM extract：把论文抽成「主张 + 失效模式」结构图
+| 产品 | 命令 | 干什么 | 实测 |
+|---|---|---|---|
+| LKM extract | `bohr lkm extract submit paper.pdf --yes` | 论文→结构化主张图谱 | 60 主张/25 失效模式；50 页上限 |
+| LKM search | `bohr lkm search "关键词" --yes` | 跨文献语义检索已入库 claim | 一次命中 10 篇论文 |
+| Uni-Parser | `bohr pdf parse --file paper.pdf --yes` | PDF 结构化解析 | 0.05 元/页；数字精度好 |
+| 模型网关 | OpenAI 兼容端点 | glm-5.3/kimi/qwen 统一接入 | 见第 5 章 models.json 配置 |
 
-**干什么**：把一篇论文 PDF 解析成「主张—前提—推理链」结构图，并自动为脆弱主张标注失效条件（`failure_mode`）——即「这条断言什么时候不成立」。这是从逐主张边界分析的角度，对人工陷阱扫描（按体裁核对论证规范）的独立交叉验证；两套原理不同的方法若在同一批主张上报警，交集就是高置信度的误读风险点。
-
-**命令**：
-
-```bash
-bohr lkm extract submit paper.pdf --yes          # 提交，返回 task_id
-bohr lkm extract result <task_id> > lkm.json     # 稍后取结果 JSON
-```
-
-**实测结果**（两篇论文，2026-10-27）：
-
-- PLOS Biology 宿主—病毒互作论文：**60 条主张 / 35 个研究问题 / 26 条动机 / 26 条推理链，其中 25 条主张带 failure_mode**。耗时 12.7 分钟（每步耗时记录在返回 JSON 的 `step_durations` 字段，可复查），费用 1 元/篇。第一条示例（字段有删节）：主张「Single sex-symmetric transmission rate in the full model」的失效条件是——若传播速率的性别不对称性在功能上重要，则「宿主×病毒互作方差主导」的核心预测只对一条平均化的传播性状成立。这正是人工陷阱扫描要抓的那类问题：结论未必错，但适用范围有裂缝。
-- PRL 离子阱论文：**27 条主张 / 13 条失效模式**，如「误差预算属 8 离子还是 2 离子晶体」直接决定轴向优势结论能否外推。
-
-**边界**：50 页上限（52 页 Annals 数学长文实测被拒）；异步执行，约 10 分钟量级；主张级、自顶向下的分析，与流程级、自下而上的人工陷阱扫描互补，不能互相替代。
-
-### 6.2 LKM search：跨论文语义检索已入库文献
-
-**干什么**：对已入库文献做 claim/question 级语义检索（非关键词匹配），可按 DOI/日期过滤。读论文遇到陌生概念（如「遗传方差分解」）时，用它找该概念在其他论文中的 claim 表述——相当于自动化的「引文上下文比对」，且返回的是结构化 claim 而非原文片段。
-
-**命令**：
-
-```bash
-bohr lkm search "host virus interaction fitness genetic variance" --yes
-```
-
-**实测结果**（2026-10-27）：一次查询命中 10 条知识变量、10 篇不同论文（如 *Quantifying the strength of viral fitness trade-offs between hosts: a meta-analy…*），每条命中带所属论文、领域分类（biology, evolutionary biology）、作者、来源。
-
-**边界**：只覆盖已入库文献——实测中尚未入库的案例论文（PLOS Biology 2026）未出现在检索结果中。与 extract 的定位互补：**新论文用 extract 建图谱，已入库的老文献用 search 跨库定位。**
-
-### 6.3 Uni-Parser：PDF 结构化解析
-
-**干什么**：把 PDF 解析为结构化 markdown（文本/公式/表格）。与 PyMuPDF 纯文本导出相比，预期保留 LaTeX 公式与表格结构。
-
-**命令**：
-
-```bash
-bohr pdf parse --file PRL论文.pdf --yes        # 提交，0.05 元/页（实测 6 页 0.3 元）
-bohr pdf result <token> --formatted markdown   # 取 markdown 结果
-```
-
-**实测结果**（6 页 PRL 论文）：markdown 输出保留了科学记数法的数字精度（「7.4 × 10⁻²」「5 × 10⁻³」），正文段落结构完整，作者与单位信息完好。
-
-**边界**：本次 6 页 PRL **未输出结构化表格与 LaTeX 公式块**（Table I 的内容以行文形式存在）——即宣传的公式/表格结构化在该样例上没有兑现。选型建议：做纯文本页码锚定，本地 PyMuPDF 已够用（免费、无页数限制）；公式密集长文与跨页表格才是 Uni-Parser 的潜在增量，用前先拿几页试算。
-
-### 6.4 Bohrium 模型网关：OpenAI 兼容的统一模型接入
-
-**干什么**：为 agent 提供模型的统一接入（OpenAI completions 兼容协议）。多个模型（运行模型与复核模型）可分离配置，避免同一模型既当运动员又当裁判。
-
-**命令**：配置即第 5.1 节给出的 `models.json` 全文；配置完用下面命令验证：
-
-```bash
-pi --model bohrium/glm-5.3 "只回复 ok"
-# 预期输出：ok
-```
-
-**实测结果**：glm-5.3（thinking=max）经网关接入 pi-coding-agent 1.3.0，跑完第 5.3 节全部精读运行；kimi-k3、qwen3.8-max 按同法追加条目后用作复核模型。网关模型基线实测：强模型在 thinking=max 下 38 条锚点抽查 37 条页码精确命中、0 编造——所以流程校验防的不是「这一次运行」，而是「另一次运行翻车」。
-
-**边界**：端点 `https://open.bohrium.com/openapi/model-gateway/v1` 未见于官方文档（Apifox 文档与 bohrium-skills 仓库均未收录），配置以平台实际返回为准；调用按 token 计费、成本自付（glm-5.3 计价见 `cost` 字段）。
-
-### 本章可执行命令：四产品全链路
-
-```bash
-export BOHR_ACCESS_KEY="你的 AccessKey"
-# ① 读前：结构化解析（可选，公式密集长文才需要）
-bohr pdf parse --file paper.pdf --yes && bohr pdf result <token> --formatted markdown > paper_parsed.md
-# ② 读中：网关模型精读（配置见 5.1）
-pi --skill skills/xread --model bohrium/glm-5.3 "精读 paper.txt，输出审读报告" > report.md
-# ③ 读后：锚点校验 + LKM 失效模式交叉验证
-python3 skills/xread/scripts/verify_anchors.py report.md paper.txt
-bohr lkm extract submit paper.pdf --yes && bohr lkm extract result <task_id> > lkm.json
-# ④ 跨文献：把陌生概念放到全库检索
-bohr lkm search "你的概念关键词" --yes
-```
-
-
----
+**完整教程**（含逐命令、预期输出、计费、字段解读）：[`bohrium-workflow/bohrium_tutorial.md`](bohrium-workflow/bohrium_tutorial.md)
 
 ## 7. 踩坑实录：四个真实发现
 
